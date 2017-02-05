@@ -28,6 +28,6 @@
     "pass-stream": "^0.1.5",
     "q": "^1.4.1",
     "recursive-readdir": "^2.1.0",
-    "zip-stream": "git+ssh://github.com/anthrax63/node-zip-stream.git"
+    "zip-stream": "git+https://github.com/anthrax63/node-zip-stream.git"
   }
 }
