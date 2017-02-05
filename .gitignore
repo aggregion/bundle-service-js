@@ -1,0 +1,6 @@
+node_modules
+coverage
+lib
+npm
+.DS_Store
+.idea
