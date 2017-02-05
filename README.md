@@ -1,5 +1,7 @@
 # Aggregion bundle management library
 
+#### Latest build status: ![Build status](https://bamboo.aggregion.com/plugins/servlet/buildStatusImage/AG-BS)
+
 This library can create, unpack, encrypt and decrypt bundles used in Aggregion.
 
 Support creating from:
