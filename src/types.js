@@ -41,7 +41,7 @@ class BundleStreamFactory {
   /**
    * Creates instance of bundle readable stream
    * @param {StreamOptions} options
-   * @return {ZipReadableStream}
+   * @return {Stream}
    */
   static createReadStream(options) {
     throw new Error('Not supported');
@@ -50,7 +50,7 @@ class BundleStreamFactory {
   /**
    * Creates instance of bundle writable stream
    * @param {StreamOptions} options
-   * @return {ZipWritableStream}
+   * @return {Stream}
    */
   static createWriteStream(options) {
     throw new Error('Not supported');
