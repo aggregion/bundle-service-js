@@ -8,7 +8,8 @@
     "test": "./node_modules/mocha/bin/mocha ./src/**/*.spec.js"
   },
   "bin": {
-    "makebundle": "./bin/makebundle.js"
+    "makebundle": "./bin/makebundle.js",
+    "bundleinfo": "./bin/bundleinfo.js"
   },
   "license": "ISC",
   "devDependencies": {

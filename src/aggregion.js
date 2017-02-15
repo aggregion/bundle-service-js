@@ -65,7 +65,7 @@ class AggregionBundleStream extends DuplexStream {
                 return {
                   type: EntryType.FILE,
                   bundlePath: f,
-                  props: allProps[i]
+                  props: this._encrypted ? allProps[i] : BundleProps.fromJson(allProps[i].toString())
                 }
               }),
               {end: true}
