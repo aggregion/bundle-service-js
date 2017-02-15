@@ -63,7 +63,7 @@ class AggregionWritableFileStream extends WritableStream {
       return bundle
         .writeFilePropertiesData(file, BundleProps.fromObject({size}).toJson())
         .then(() => {
-          self.emit('finish');
+          self.emit('finish', self._file);
           if (callback) {
             callback();
           }

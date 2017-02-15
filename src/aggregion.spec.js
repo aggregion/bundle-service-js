@@ -4,6 +4,7 @@ const path = require('path');
 const temp = require('temp');
 const fs = require('fs');
 const sinon = require('sinon');
+const Bundle = require('agg-bundle');
 
 describe('Aggregion', function () {
 
@@ -54,21 +55,32 @@ describe('Aggregion', function () {
           let writeStream = Aggregion.createWriteStream({path: tempFile});
           readStream.pipe(writeStream);
           writeStream.once('finish', () => {
-            let testStream = Aggregion.createReadStream({path: tempFile});
-            testStream
-              .once('ready', () => {
-                testStream._entries
-                checkInfo(testStream.getInfo(), (e) => {
-                  if (e) {
-                    return done(e);
-                  }
-                  checkProps(testStream.getProps(), done);
-                });
-                setTimeout(() => fs.unlink(tempFile), 0);
+            let testBundle = new Bundle({path: tempFile});
+            let fd = testBundle.openFile('index.html');
+            console.log('file opened', fd);
+            testBundle
+              .readFilePropertiesData(fd)
+              .then((propsData) => {
+                console.log(propsData, JSON.parse(propsData.toString()));
+                return Promise.resolve();
               })
-              .once('error', (e) => {
-                throw e;
-              });
+              .then(() => {
+                let testStream = Aggregion.createReadStream({path: tempFile});
+                testStream
+                  .once('ready', () => {
+                    checkInfo(testStream.getInfo(), (e) => {
+                      if (e) {
+                        return done(e);
+                      }
+                      checkProps(testStream.getProps(), done);
+                    });
+                    setTimeout(() => fs.unlink(tempFile), 0);
+                  })
+                  .once('error', (e) => {
+                    throw e;
+                  });
+              })
+              .catch(done);
           });
         });
 

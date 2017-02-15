@@ -14,7 +14,7 @@ const CipherMode = {
   DECRYPT: 'decrypt'
 };
 
-class CryptoTransformStream extends TransformStream{
+class CryptoTransformStream extends TransformStream {
 
   /**
    * Constructs a new instance
@@ -78,6 +78,9 @@ class CryptoTransformStream extends TransformStream{
     let dec = cipher.update(props, null, 'hex');
     dec += cipher.final('hex');
     let data = new Buffer(dec, 'hex');
+    if (this._mode === CipherMode.DECRYPT) {
+      return BundleProps.fromJson(data.toString('utf8'));
+    }
     return data;
   }
 
@@ -105,6 +108,7 @@ class CryptoTransformStream extends TransformStream{
       ? Crypto.createCipheriv(algo, aesKey, new Buffer(0))
       : Crypto.createDecipheriv(algo, aesKey, new Buffer(0));
   }
+
 
   /**
    * Derives key

@@ -117,19 +117,29 @@ class AggregionBundleStream extends DuplexStream {
       }
       if (entry.type === EntryType.FILE) {
         let writeStream = new AggregionWritableFileStream({bundle, path: entry.bundlePath});
-        writeStream.on('finish', () => {
-          done();
+        writeStream.on('finish', (fd) => {
+          if (entry.props) {
+            let data;
+            if (entry.props instanceof BundleProps) {
+              data = new Buffer(entry.props.toJson(), 'utf8');
+            } else {
+              data = entry.props;
+            }
+            bundle
+              .writeFilePropertiesData(fd, data)
+              .then(() => {
+                console.log('writed props for', entry.bundlePath);
+                done();
+              })
+              .catch((e) => {
+                console.log(e);
+                this.emit('error', e);
+              });
+          } else {
+            done();
+          }
         });
         entry.stream.pipe(writeStream);
-        if (entry.props) {
-          let data;
-          if (typeof entry.props === 'object') {
-            data = new Buffer(entry.props.toJson(), 'utf8');
-          } else if (entry.props instanceof Buffer) {
-            data = entry.props;
-          }
-          bundle.writeFilePropertiesData(bundle.openFile(entry.bundlePath), data);
-        }
       } else if (entry.type === EntryType.BUNDLE_INFO) {
         bundle
           .setBundleInfoData(this._propsDataFromEntry(entry))
