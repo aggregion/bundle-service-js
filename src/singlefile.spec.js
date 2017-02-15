@@ -33,6 +33,8 @@ describe('SingleFile', function () {
             zipReadStream
               .on('readable', () => {
                 let count = zipReadStream.getFilesCount();
+                let files = zipReadStream.getFiles();
+                files[0].should.equal('index.pdf');
                 count.should.equal(1);
                 zipReadStream.getInfo().toJson().should.equal(BundleProps.fromObject({}).toJson());
                 zipReadStream.getProps().toJson().should.equal(BundleProps.fromObject(props).toJson());

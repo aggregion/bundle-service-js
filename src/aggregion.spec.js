@@ -57,6 +57,7 @@ describe('Aggregion', function () {
             let testStream = Aggregion.createReadStream({path: tempFile});
             testStream
               .once('ready', () => {
+                testStream._entries
                 checkInfo(testStream.getInfo(), (e) => {
                   if (e) {
                     return done(e);

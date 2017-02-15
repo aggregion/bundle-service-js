@@ -121,6 +121,15 @@ class AggregionBundleStream extends DuplexStream {
           done();
         });
         entry.stream.pipe(writeStream);
+        if (entry.props) {
+          let data;
+          if (typeof entry.props === 'object') {
+            data = new Buffer(entry.props.toJson(), 'utf8');
+          } else if (entry.props instanceof Buffer) {
+            data = entry.props;
+          }
+          bundle.writeFilePropertiesData(bundle.openFile(entry.bundlePath), data);
+        }
       } else if (entry.type === EntryType.BUNDLE_INFO) {
         bundle
           .setBundleInfoData(this._propsDataFromEntry(entry))

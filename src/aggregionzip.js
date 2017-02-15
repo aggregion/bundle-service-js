@@ -50,6 +50,7 @@ class AggregionZipReadableStream extends ReadableStream {
           ...entries,
           {end: true}
         ];
+        this._files = entries.map((e) => e.bundlePath);
         this._entryPos = 0;
         this._ready = true;
         this._info = info;
@@ -77,6 +78,14 @@ class AggregionZipReadableStream extends ReadableStream {
    */
   getProps() {
     return this._props;
+  }
+
+  /**
+   * Returns files in the bundle
+   * @return {string[]}
+   */
+  getFiles() {
+    return this._files;
   }
 
   /**
