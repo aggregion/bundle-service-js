@@ -66,7 +66,7 @@ class CryptoTransformStream extends TransformStream {
    * @private
    */
   _wrapProps(salt, props) {
-    console.log('_wrapProps', salt, props, props.length, salt == 'index.pdf' ? props.toString() : '');
+    console.log('_wrapProps', salt, props, props.length, this._mode);
     if (props instanceof BundleProps) {
       if (this._mode === CipherMode.DECRYPT) {
         return props;

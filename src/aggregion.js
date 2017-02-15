@@ -57,7 +57,7 @@ class AggregionBundleStream extends DuplexStream {
         return Promise
           .all(promises)
           .then((allProps) => {
-            console.log(allProps);
+            console.log('allProps', path, allProps);
             this._files = files;
             this._entries = [
               {type: EntryType.BUNDLE_INFO, value: this._info},
