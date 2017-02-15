@@ -49,20 +49,30 @@ class AggregionBundleStream extends DuplexStream {
         return bundle.getFiles();
       })
       .then((files) => {
-        this._files = files;
-        this._entries = [
-          {type: EntryType.BUNDLE_INFO, value: this._info},
-          {type: EntryType.BUNDLE_PROPS, value: this._props},
-          ...files.map((f) => {
-            return {
-              type: EntryType.FILE,
-              bundlePath: f,
-              props: BundleProps.fromObject({size: bundle.getFileSize(f)})
-            }
-          }),
-          {end: true}
-        ];
-        this.emit('ready');
+        let promises = [];
+        files.forEach((f) => {
+          let fd = bundle.openFile(f);
+          promises.push(bundle.readFilePropertiesData(fd));
+        });
+        return Promise
+          .all(promises)
+          .then((allProps) => {
+            console.log(allProps);
+            this._files = files;
+            this._entries = [
+              {type: EntryType.BUNDLE_INFO, value: this._info},
+              {type: EntryType.BUNDLE_PROPS, value: this._props},
+              ...files.map((f, i) => {
+                return {
+                  type: EntryType.FILE,
+                  bundlePath: f,
+                  props: allProps[i]
+                }
+              }),
+              {end: true}
+            ];
+            this.emit('ready');
+          });
       })
       .catch((e) => {
         this.emit('error', e);

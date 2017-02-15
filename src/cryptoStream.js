@@ -66,6 +66,7 @@ class CryptoTransformStream extends TransformStream {
    * @private
    */
   _wrapProps(salt, props) {
+    console.log('_wrapProps', salt, props, props.length, salt == 'index.pdf' ? props.toString() : '');
     if (props instanceof BundleProps) {
       if (this._mode === CipherMode.DECRYPT) {
         return props;
@@ -73,7 +74,7 @@ class CryptoTransformStream extends TransformStream {
       props = new Buffer(props.toJson(), 'UTF-8');
     }
     let propsKey = this._deriveKey(salt);
-    //console.log('key for props', salt, propsKey);
+    console.log('key for props', salt, propsKey);
     let cipher = this._createCipher(propsKey);
     cipher.setAutoPadding(true);
     let dec = cipher.update(props, null, 'hex');
@@ -94,7 +95,7 @@ class CryptoTransformStream extends TransformStream {
    */
   _wrapStream(salt, stream) {
     let aesKey = this._deriveKey(salt);
-    //console.log('key for file', salt, aesKey);
+    console.log('key for file', salt, aesKey);
     return stream.pipe(this._createCipher(aesKey));
   }
 

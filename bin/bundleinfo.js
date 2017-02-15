@@ -53,6 +53,10 @@ cli.main((args, options) => {
     process.exit(-1);
   });
   if (decryptor) {
+    decryptor.on('error', (e) => {
+      cli.fatal(e);
+      process.exit(-1);
+    });
     rs.pipe(decryptor).pipe(ws);
   } else {
     rs.pipe(ws);
