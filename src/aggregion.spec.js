@@ -57,11 +57,9 @@ describe('Aggregion', function () {
           writeStream.once('finish', () => {
             let testBundle = new Bundle({path: tempFile});
             let fd = testBundle.openFile('index.html');
-            console.log('file opened', fd);
             testBundle
               .readFilePropertiesData(fd)
               .then((propsData) => {
-                console.log(propsData, JSON.parse(propsData.toString()));
                 return Promise.resolve();
               })
               .then(() => {

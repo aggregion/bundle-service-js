@@ -45,11 +45,7 @@ describe('AggregionWritableFileStream', () => {
         size.should.equal(writtenSize);
         let fd = bundle.openFile(filePath);
         bundle
-          .readFilePropertiesData(fd)
-          .then((props) => {
-            props.toString().should.equal(BundleProps.fromObject({size: size}).toJson());
-            return bundle.readFileBlock(fd, size);
-          })
+          .readFileBlock(fd, size)
           .then((block) => {
             let sourceStream = passStream();
             sourceStream.pipe(checkHashStream);

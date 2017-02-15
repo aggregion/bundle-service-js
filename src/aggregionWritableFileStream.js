@@ -58,23 +58,16 @@ class AggregionWritableFileStream extends WritableStream {
 
   end(chunk, encoding, done) {
     let self = this;
-    function setAttrs(size, callback) {
-      let {_file: file, _bundle: bundle} = self;
-      return bundle
-        .writeFilePropertiesData(file, BundleProps.fromObject({size}).toJson())
-        .then(() => {
-          self.emit('finish', self._file);
-          if (callback) {
-            callback();
-          }
-        })
-        .catch((e) => {
-          self.emit('error', e);
-          if (callback) {
-            callback(e);
-          }
-        });
-    }
+    let finish = (e) => {
+      if (e) {
+        this.emit('error', e);
+      } else {
+        this.emit('finish', self._file);
+      }
+      if (done) {
+        done(e);
+      }
+    };
 
     this._initPromise.then(() => {
       Promise
@@ -82,17 +75,14 @@ class AggregionWritableFileStream extends WritableStream {
         .then(() => {
           if (chunk && chunk.length > 0) {
             this._write(chunk, encoding, (e) => {
-              if (e) {
-                done(e);
-              }
-              setAttrs(this._size, done);
+              finish(e);
             });
           } else {
-            setAttrs(this._size, done);
+            finish();
           }
         })
         .catch((e) => {
-          self.emit('error', e);
+          finish(e);
         });
     });
   }

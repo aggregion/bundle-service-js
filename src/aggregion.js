@@ -57,7 +57,6 @@ class AggregionBundleStream extends DuplexStream {
         return Promise
           .all(promises)
           .then((allProps) => {
-            console.log('allProps', path, allProps);
             this._files = files;
             this._entries = [
               {type: EntryType.BUNDLE_INFO, value: this._info},
@@ -138,11 +137,9 @@ class AggregionBundleStream extends DuplexStream {
             bundle
               .writeFilePropertiesData(fd, data)
               .then(() => {
-                console.log('writed props for', entry.bundlePath);
                 done();
               })
               .catch((e) => {
-                console.log(e);
                 this.emit('error', e);
               });
           } else {

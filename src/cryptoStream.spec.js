@@ -55,7 +55,6 @@ describe('CryptoStream', () => {
         require('chai').should();
         BundleProps.fromJson(bundleData.infoData.toString()).should.deep.equal(etalonInfo);
         BundleProps.fromJson(bundleData.propsData.toString()).should.deep.equal(etalonProps);
-        console.log('bundleData.filePropsData.toString()', bundleData.filePropsData.toString());
         BundleProps.fromJson(bundleData.filePropsData.toString()).should.deep.equal(etalonFileProps);
         bundleData.fileData.toString().should.equal(etalonFileData);
         return Promise.resolve();
