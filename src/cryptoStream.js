@@ -44,7 +44,7 @@ class CryptoTransformStream extends TransformStream {
       if (entry.type === EntryType.FILE) {
         entry.stream = this._wrapStream(entry.bundlePath, entry.stream);
         if (entry.props) {
-          entry.props = this._wrapProps('AES', entry.props);
+          entry.props = this._wrapProps(entry.bundlePath, entry.props);
         }
         this.push(entry);
       } else if (entry.type == EntryType.BUNDLE_PROPS) {
@@ -73,6 +73,7 @@ class CryptoTransformStream extends TransformStream {
       props = new Buffer(props.toJson(), 'UTF-8');
     }
     let propsKey = this._deriveKey(salt);
+    //console.log('key for props', salt, propsKey);
     let cipher = this._createCipher(propsKey);
     cipher.setAutoPadding(true);
     let dec = cipher.update(props, null, 'hex');
@@ -93,6 +94,7 @@ class CryptoTransformStream extends TransformStream {
    */
   _wrapStream(salt, stream) {
     let aesKey = this._deriveKey(salt);
+    //console.log('key for file', salt, aesKey);
     return stream.pipe(this._createCipher(aesKey));
   }
 
