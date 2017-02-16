@@ -119,7 +119,7 @@ class AggregionZipReadableStream extends ReadableStream {
         if (err) {
           throw err;
         }
-        this.push({type: EntryType.FILE, bundlePath: entry.bundlePath, stream});
+        this.push({type: EntryType.FILE, bundlePath: entry.bundlePath, stream, props: entry.props});
       });
     } else {
       this.push(entry);

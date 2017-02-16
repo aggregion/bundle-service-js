@@ -3,22 +3,27 @@
 const cli = require('cli');
 const check = require('check-types');
 const BundleService = require('../src/');
+const TextStream = require('../src/text');
 const process = require('process');
+const EntryType = require('../src/entryType');
 
 cli.parse({
   index: ['i', 'Relative path to the index file in the bundle', 'string'],
   output: ['o', 'Path to the destination file', 'string'],
   inputKey: ['k', 'Hexadecimal key of input file', 'string'],
-  outputKey: ['K', 'Hexadecimal key of output file', 'string']
+  outputKey: ['K', 'Hexadecimal key of output file', 'string'],
+  text: ['t', 'Output as text']
 });
 
 cli.main((args, options) => {
   try {
     check.assert.nonEmptyString(options.index, '"--index" is required argument and should be non-empty string');
-    check.assert.nonEmptyString(options.output, '"--output" is required argument and should be non-empty string');
-    check.assert.nonEmptyArray(args, 'You must specify input file or directory');
-    check.assert.hasLength(args, 1, 'You can specify only one input file or directory');
-    check.assert.nonEmptyString(args[0], 'Invalid input file argument');
+    if (!options.text) {
+      check.assert.nonEmptyString(options.output, '"--output" is required argument and should be non-empty string');
+      check.assert.nonEmptyArray(args, 'You must specify input file or directory');
+      check.assert.hasLength(args, 1, 'You can specify only one input file or directory');
+      check.assert.nonEmptyString(args[0], 'Invalid input file argument');
+    }
     if (options.inputKey) {
       check.assert.hasLength(options.inputKey, 64, 'Input key should be length of 64');
     }
@@ -30,10 +35,27 @@ cli.main((args, options) => {
   }
   let path = args[0];
   let rs = BundleService.createReadStream({path, info: {}, props: {main_file: options.index}});
-  let ws = BundleService.createWriteStream({path: options.output});
+  let ws = options.text ? TextStream.createWriteStream() : BundleService.createWriteStream({path: options.output});
+  if (options.text) {
+    ws.on('entry', (entry) => {
+      if (entry.type === EntryType.FILE) {
+        console.log('File:');
+        console.log('  Path:', entry.bundlePath);
+        if (entry.props) {
+          console.log('  Properties:', entry.props.toJson());
+        }
+      } else if (entry.type == EntryType.BUNDLE_PROPS) {
+        console.log('Bundle properties:');
+        console.log('  ', entry.value.toJson());
+      } else if (entry.type == EntryType.BUNDLE_INFO) {
+        console.log('Bundle info:');
+        console.log('  ', entry.value.toJson());
+      }
+    });
+  }
   ws.on('finish', () => {
     cli.ok('Done!');
-    setTimeout(() => process.exit(0), 20000);
+    process.exit(0);
   });
   rs.on('error', (e) => {
     cli.fatal(e);
