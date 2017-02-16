@@ -121,6 +121,7 @@ class AggregionBundleStream extends DuplexStream {
     let {_bundle: bundle} = this;
     this._initPromise.then(() => {
       if (entry.end) {
+        bundle.close();
         this.emit('finish');
         return;
       }

@@ -5,6 +5,7 @@ const temp = require('temp');
 const fs = require('fs');
 const sinon = require('sinon');
 const Bundle = require('agg-bundle');
+const BundleProps = require('./bundleprops');
 
 describe('Aggregion', function () {
 
@@ -60,7 +61,8 @@ describe('Aggregion', function () {
             testBundle
               .readFilePropertiesData(fd)
               .then((propsData) => {
-                return Promise.resolve();
+                propsData.toString().should.equal(BundleProps.fromObject({"size":5}).toJson());
+                return {};
               })
               .then(() => {
                 let testStream = Aggregion.createReadStream({path: tempFile});

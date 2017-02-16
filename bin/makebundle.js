@@ -33,7 +33,7 @@ cli.main((args, options) => {
   let ws = BundleService.createWriteStream({path: options.output});
   ws.on('finish', () => {
     cli.ok('Done!');
-    process.exit(0);
+    setTimeout(() => process.exit(0), 20000);
   });
   rs.on('error', (e) => {
     cli.fatal(e);
