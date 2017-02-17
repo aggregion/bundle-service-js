@@ -1,11 +1,11 @@
 {
   "name": "agg-bundle-service",
   "author": "Denis Bezrukov <anthrax63@gmail.com>",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "Service for working with Aggregion bundles",
   "main": "./src/index.js",
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha ./src/**/*.spec.js"
+    "test": "./node_modules/.bin/mocha ./src/**/*.spec.js"
   },
   "bin": {
     "makebundle": "./bin/makebundle.js",

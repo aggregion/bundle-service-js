@@ -21,8 +21,8 @@ class AggregionBundleStream extends DuplexStream {
     check.assert.assigned(options, '"options" is required argument');
     check.assert.nonEmptyString(options.path, '"options.path" should be non-empty string');
     super({objectMode: true});
-    let {path} = options;
-    let bundle = new AggregionBundle({path});
+    let {path, readonly} = options;
+    let bundle = new AggregionBundle({path, readonly});
     this._encrypted = options.encrypted;
     this._entries = [];
     this._entryPos = 0;
@@ -192,7 +192,7 @@ class Aggregion extends BundleStreamFactory {
     if (!fs.existsSync(options.path)) {
       throw new Error(`File does not exist: ${options.path}`);
     }
-    return new AggregionBundleStream(options);
+    return new AggregionBundleStream(Object.assign(options, {readonly: true}));
   }
 
   /**
