@@ -22,7 +22,6 @@
   },
   "dependencies": {
     "agg-bundle": "git+ssh://git@stash.aggregion.com:7999/bck/node-bundle-module.git",
-    "agg-crypto-service": "git+ssh://git@stash.aggregion.com:7999/bck/crypto-service-js.git",
     "check-types": "^7.1.3",
     "cli": "^1.0.1",
     "mocha-bamboo-reporter": "^1.1.1",
