@@ -1,4 +1,5 @@
 const Zip = require('./zip');
+const Aggregion = require('./aggregion');
 const should = require('chai').should();
 const path = require('path');
 const temp = require('temp');
@@ -70,6 +71,39 @@ describe('Zip', function () {
             done();
           }, 200);
         });
+
+        it('should resolve main file', (done) => {
+          let readStream = Zip.createReadStream({path: testBundlePath});
+          let tempFile = temp.path() + '.agb';
+          let writeStream = Aggregion.createWriteStream({path: tempFile});
+          readStream.pipe(writeStream);
+          writeStream.once('finish', () => {
+            try {
+              let testStream = Aggregion.createReadStream({path: tempFile});
+              testStream
+                .once('ready', () => {
+                  let props = testStream.getProps();
+                  let mainFile = props.get('main_file');
+                  should.exist(mainFile);
+                  mainFile.should.be.equal('index.html');
+                  done();
+                  setTimeout(() => fs.unlink(tempFile), 0);
+                })
+                .once('error', (e) => {
+                  done(e);
+                });
+            } catch (e) {
+              done(e);
+            }
+          });
+          writeStream.once('error', (e) => {
+            done(e);
+          });
+          readStream.once('error', (e) => {
+            done(e);
+          });
+        });
+
       });
 
       describe('#getFilesCount', () => {

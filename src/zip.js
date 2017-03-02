@@ -15,21 +15,21 @@ class ZipReadableStream extends ReadableStream {
    * Constructs new instance
    * @param {object} options Options
    * @param {string} options.path Path to directory
-   * @param {BundleProps|Map|object} options.info Bundle info
-   * @param {BundleProps|Map|object} options.props Bundle properties
+   * @param {BundleProps|Map|object} [options.info] Bundle info
+   * @param {BundleProps|Map|object} [options.props] Bundle properties
    * @constructor
    */
   constructor(options) {
     super({objectMode: true});
     check.assert.nonEmptyString(options.path, '"options.path" should be non-empty string');
-    check.assert.assigned(options.info, '"options.info" is required argument');
-    check.assert.assigned(options.props, '"options.props" is required argument');
     if (!fs.existsSync(options.path))
       throw new Error(`File does not exist: ${options.path}`);
     let {path, info, props} = options;
+    if (!info) {
+      info = {};
+    }
     this._entries = [];
     this._entryPos = 0;
-    this._props = BundleProps.fromObject(props);
     this._info = BundleProps.fromObject(info);
     let zip = new StreamZip({
       file: path,
@@ -39,6 +39,17 @@ class ZipReadableStream extends ReadableStream {
       .on('ready', () => {
         let entries = [];
         let zipEntries = zip.entries();
+        if (!props) {
+          if (zipEntries['index.pdf']) {
+            props = {main_file: 'index.pdf'};
+          } else if (zipEntries['index.html']) {
+            props = {main_file: 'index.html'};
+          } else {
+            this.emit('error', new Error('Can\'t resolve index file'));
+            props = {};
+          }
+        }
+        this._props = BundleProps.fromObject(props);
         for (let entryKey of Object.keys(zipEntries)) {
           let entry = zipEntries[entryKey];
           if (!entry.isDirectory) {
@@ -50,8 +61,8 @@ class ZipReadableStream extends ReadableStream {
           }
         }
         this._entries = [
-          {type: EntryType.BUNDLE_INFO, value: info},
-          {type: EntryType.BUNDLE_PROPS, value: props},
+          {type: EntryType.BUNDLE_INFO, value: this._info},
+          {type: EntryType.BUNDLE_PROPS, value: this._props},
           ...entries,
           {end: true}
         ];
@@ -113,7 +124,7 @@ class ZipReadableStream extends ReadableStream {
         if (err) {
           throw err;
         }
-        this.push({type: EntryType.FILE, bundlePath: entry.bundlePath, stream});
+        this.push({type: EntryType.FILE, bundlePath: entry.bundlePath, stream, props: entry.props});
       });
     } else {
       this.push(entry);

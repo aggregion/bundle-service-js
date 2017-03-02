@@ -23,7 +23,7 @@ class AggregionBundleStream extends DuplexStream {
     super({objectMode: true});
     let {path, readonly} = options;
     let bundle = new AggregionBundle({path, readonly});
-    this._encrypted = options.encrypted;
+    this._encrypted = options.encrypted || false;
     this._entries = [];
     this._entryPos = 0;
     this._files = [];
