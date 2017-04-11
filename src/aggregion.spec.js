@@ -84,14 +84,8 @@ describe('Aggregion', function () {
           });
         });
 
-        it('should emit an error if file is incorrect', (done) => {
-          let spy = sinon.spy();
-          let readStream = Aggregion.createReadStream({path: testIncorrectBundlePath});
-          readStream.once('error', spy);
-          setTimeout(() => {
-            spy.called.should.equal.true;
-            done();
-          }, 200);
+        it('should emit an error if file is incorrect', () => {
+          should.throw(() => Aggregion.createReadStream({path: testIncorrectBundlePath}));
         });
       });
 

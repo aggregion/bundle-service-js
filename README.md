@@ -70,6 +70,14 @@ readStream
   .pipe(decryptor)
   .pipe(writeStream);
 
+// Render
+
+let rendererStream = BundleService.createRenderer({path: 'path/to/render.pdf', pages: [1, 2, '3-10']});
+
+readStream
+  .pipe(decryptor)
+  .pipe(rendererStream);
+
 // Get source bundle info
 
 readStream.on('ready', () => {

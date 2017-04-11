@@ -3,6 +3,7 @@ const path = require('path');
 const fs = require('fs');
 const check = require('check-types');
 const CryptoStream = require('./cryptoStream');
+const Renderer = require('./renderer');
 
 
 class BundleService extends BundleStreamFactory{
@@ -48,6 +49,15 @@ class BundleService extends BundleStreamFactory{
    */
   static createDecryptor(key) {
     return CryptoStream.decrypt(key);
+  }
+
+  /**
+   * Creates render stream
+   * @param {object} options
+   * @return {Renderer}
+   */
+  static createRenderer(options) {
+    return Renderer.createWriteStream(options);
   }
 
   /**
