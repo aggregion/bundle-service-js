@@ -144,6 +144,7 @@ class AggregionZipWritableStream extends WritableStream {
     let archive = packer();
     archive.pipe(outputStream);
     this._archive = archive;
+    this._outputStream = outputStream;
   }
 
   /**
@@ -157,16 +158,9 @@ class AggregionZipWritableStream extends WritableStream {
     let {_archive: archive} = this;
     if (entry.end) {
       archive.finalize();
-      let self = this;
-      const waitForFinish = () => {
-        if (archive._archive.finished) {
-          setTimeout(() => self.emit('finish'), 0);
-        } else {
-          setTimeout(waitForFinish, 100);
-        }
-      };
-
-      setTimeout(waitForFinish, 100);
+      this._outputStream.on('close', () => {
+        this.emit('finish');
+      });
       return 0;
     }
     if (entry.type === EntryType.FILE) {

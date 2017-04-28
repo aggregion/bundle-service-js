@@ -5,7 +5,7 @@ const temp = require('temp');
 const fs = require('fs');
 const sinon = require('sinon');
 
-describe('Zip', function () {
+describe('AggregionZip', function () {
 
   const checkProps = (props) => {
     props.should.not.be.null;

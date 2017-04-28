@@ -150,6 +150,7 @@ class ZipWritableStream extends WritableStream {
     let archive = packer();
     archive.pipe(outputStream);
     this._archive = archive;
+    this._outputStream = outputStream;
   }
 
   /**
@@ -164,15 +165,10 @@ class ZipWritableStream extends WritableStream {
     if (entry.end) {
       archive.finalize();
       let self = this;
-      const waitForFinish = () => {
-        if (archive._archive.finished) {
-          setTimeout(() => self.emit('finish'), 0);
-        } else {
-          setTimeout(waitForFinish, 100);
-        }
-      };
-
-      setTimeout(waitForFinish, 100);
+      self._outputStream.on('close', () => {
+        done();
+        self.emit('finish');
+      });
       return 0;
     }
     if (entry.type === EntryType.FILE) {
