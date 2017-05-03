@@ -27,7 +27,7 @@ class EpubReadableStream extends ReadableStream {
     zip
       .on('ready', () => {
         let info = new BundleProps();
-        let props = BundleProps.fromObject({main_file: 'content.opf'});
+        let props = BundleProps.fromObject({main_file: 'OEBPS/content.opf'});
         let entries = [];
         let zipEntries = zip.entries();
         for (let entryKey of Object.keys(zipEntries)) {

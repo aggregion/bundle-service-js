@@ -23,7 +23,7 @@ describe('Epub', function () {
 
     describe('EpubReadStream', () => {
 
-      const props = {main_file: 'content.opf'};
+      const props = {main_file: 'OEBPS/content.opf'};
 
       describe('#pipe', () => {
         it('should pipe to writable stream', (done) => {
