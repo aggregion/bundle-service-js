@@ -17,7 +17,7 @@ class SingleFileReadableStream extends ReadableStream {
     check.assert.nonEmptyString(options.path, '"options.path" should be non-empty string');
     if (!fs.existsSync(options.path))
       throw new Error(`File does not exist: ${options.path}`);
-    let fileExt = path.extname(options.path);
+    let fileExt = path.extname(options.path).toLowerCase();
     let bundleFileName = 'index' + fileExt;
     this._props = BundleProps.fromObject({
       main_file: 'index.pdf'

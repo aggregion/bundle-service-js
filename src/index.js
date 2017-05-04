@@ -79,25 +79,25 @@ class BundleService extends BundleStreamFactory{
       },
       // Resolve ePub
       (srcPath) => {
-        if (path.extname(srcPath) === '.epub') {
+        if (path.extname(srcPath).toLowerCase() === '.epub') {
           return require('./epub');
         }
       },
       // Resolve Aggregion ZIP-bundle
       (srcPath) => {
-        if (path.extname(srcPath) === '.aggregion') {
+        if (path.extname(srcPath).toLowerCase() === '.aggregion') {
           return require('./aggregionzip');
         }
       },
       // Resolve Aggregion binary bundle
       (srcPath) => {
-        if (path.extname(srcPath) === '.agb') {
+        if (path.extname(srcPath).toLowerCase() === '.agb') {
           return require('./aggregion');
         }
       },
       // Resolve ZIP-archive
       (srcPath) => {
-        if (path.extname(srcPath) === '.zip') {
+        if (path.extname(srcPath).toLowerCase() === '.zip') {
           return require('./zip');
         }
       },
