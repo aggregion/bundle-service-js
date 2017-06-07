@@ -44,7 +44,7 @@ class BundleStreamFactory {
    * @return {Stream}
    */
   static createReadStream(options) {
-    throw new Error('Not supported');
+    throw new Error(`Stream does not support reading`);
   }
 
   /**
@@ -53,7 +53,7 @@ class BundleStreamFactory {
    * @return {Stream}
    */
   static createWriteStream(options) {
-    throw new Error('Not supported');
+    throw new Error(`Stream does not support writing`);
   }
 }
 
