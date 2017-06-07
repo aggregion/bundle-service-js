@@ -5,7 +5,7 @@ const temp = require('temp');
 const fs = require('fs');
 
 describe('BundleService', () => {
-  describe('#resolve', () => {
+  describe.only('#resolve', () => {
     it('should resolve directory streamer', () => {
       let srcPath = path.join(__dirname, '../testdata/directory');
       BundleService.resolve(srcPath).should.be.equal(require('./directory'));
@@ -34,6 +34,17 @@ describe('BundleService', () => {
     it('should resolve single file streamer', () => {
       let srcPath = path.join(__dirname, '../testdata/test.pdf');
       BundleService.resolve(srcPath).should.be.equal(require('./singleFile'));
+    });
+
+    it('should resolve by explicit type argument', () => {
+      let srcPath = path.join(__dirname, '../testdata/test.pdf');
+      BundleService.resolve(srcPath, 'write', 'web').should.be.equal(require('./web/web'));
+      BundleService.resolve(srcPath, 'write', 'agb').should.be.equal(require('./aggregion'));
+      BundleService.resolve(srcPath, 'write', 'aggregion').should.be.equal(require('./aggregionzip'));
+      BundleService.resolve(srcPath, 'write', 'epub').should.be.equal(require('./epub'));
+      BundleService.resolve(srcPath, 'write', 'zip').should.be.equal(require('./zip'));
+      BundleService.resolve(srcPath, 'write', 'directory').should.be.equal(require('./directory'));
+
     });
 
     it('should resolve in any characters case in file extension', () => {

@@ -10,15 +10,15 @@ const EntryType = require('../src/entryType');
 cli.parse({
   index: ['i', 'Relative path to the index file in the bundle', 'string'],
   output: ['o', 'Path to the destination file', 'string'],
+  outputType: ['t', 'Type of output bundle. By default it automatically resolves by extension.', 'string'],
   inputKey: ['k', 'Hexadecimal key of input file', 'string'],
-  outputKey: ['K', 'Hexadecimal key of output file', 'string'],
-  text: ['t', 'Output as text']
+  outputKey: ['K', 'Hexadecimal key of output file', 'string']
 });
 
 cli.main((args, options) => {
   try {
-    check.assert.nonEmptyString(options.index, '"--index" is required argument and should be non-empty string');
-    if (!options.text) {
+    //check.assert.nonEmptyString(options.index, '"--index" is required argument and should be non-empty string');
+    if (!options.outputType === 'text') {
       check.assert.nonEmptyString(options.output, '"--output" is required argument and should be non-empty string');
       check.assert.nonEmptyArray(args, 'You must specify input file or directory');
       check.assert.hasLength(args, 1, 'You can specify only one input file or directory');
@@ -35,8 +35,8 @@ cli.main((args, options) => {
   }
   let path = args[0];
   let rs = BundleService.createReadStream({path, info: {}, props: {main_file: options.index}});
-  let ws = options.text ? TextStream.createWriteStream() : BundleService.createWriteStream({path: options.output});
-  if (options.text) {
+  let ws = BundleService.createWriteStream({path: options.output, type: options.outputType});
+  if (options.outputType === 'text') {
     ws.on('entry', (entry) => {
       if (entry.type === EntryType.FILE) {
         console.log('File:');
@@ -56,6 +56,10 @@ cli.main((args, options) => {
   ws.on('finish', () => {
     cli.ok('Done!');
     process.exit(0);
+  });
+  ws.on('error', (e) => {
+    cli.fatal(e);
+    process.exit(-1);
   });
   rs.on('error', (e) => {
     cli.fatal(e);
