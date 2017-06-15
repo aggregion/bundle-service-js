@@ -11,6 +11,8 @@ cli.parse({
   index: ['i', 'Relative path to the index file in the bundle', 'string'],
   output: ['o', 'Path to the destination file', 'string'],
   outputType: ['t', 'Type of output bundle. By default it automatically resolves by extension.', 'string'],
+  idApiUrl: ['Wu', 'Url to ID service API (for web-bundle).', 'string'],
+  tokenLocalStoragePath: ['Wt', 'Path to localStorage token (for web-bundle)', 'string'],
   inputKey: ['k', 'Hexadecimal key of input file', 'string'],
   outputKey: ['K', 'Hexadecimal key of output file', 'string']
 });
