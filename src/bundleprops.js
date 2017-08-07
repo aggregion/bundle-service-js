@@ -46,6 +46,18 @@ class BundleProps extends Map {
   }
 
   /**
+   * Converts properties to Object
+   * @return {object}
+   */
+  toObject() {
+    let obj = {};
+    for (let [k,v] of this) {
+      obj[k] = v;
+    }
+    return obj;
+  }
+
+  /**
    * Converts properties to JSON-string
    * @return {string}
    */
