@@ -5,11 +5,25 @@ const mkdirp = require('mkdirp');
 const path = require('path');
 const fs = require('fs-extra');
 const handlebars = require('handlebars');
+const recursive = require("recursive-readdir");
+const {JSDOM} = require('jsdom');
+
+const relativeToFile = (fromFile, toFile) => {
+  return `${path.relative(path.dirname(fromFile), path.dirname(toFile))}/${path.basename(toFile)}`;
+};
 
 const finalizeWithTemplate = (mainFile, destDir, template) => {
+  const commonJsDataDir = path.join(__dirname, './data/common');
+  const commonJsDir = path.join(destDir, './common');
+  const jsInterfaceDest = path.join(commonJsDir, 'aggregion.js');
+  mkdirp.sync(commonJsDir);
   const dataDir = path.join(__dirname, `./data/${template}`);
   const indexFile = path.join(destDir, 'index.html');
+  const contentDir = path.join(destDir, '_data');
   return fs.copy(dataDir, destDir)
+    .then(() => {
+      return fs.copy(commonJsDataDir, commonJsDir);
+    })
     .then(() => {
       return fs.readFile(indexFile, 'utf8');
     })
@@ -17,6 +31,37 @@ const finalizeWithTemplate = (mainFile, destDir, template) => {
       const template = handlebars.compile(templateData);
       const html = template({mainFile});
       return fs.writeFile(indexFile, html, 'utf8');
+    })
+    .then(() => {
+      return new Promise((resolve, reject) => {
+        recursive(contentDir, [(file, stats) => stats.isDirectory() || !/\.htm[l]{0,1}$/.test(file)], (err, files) => {
+          if (err) {
+            return reject(err);
+          }
+          resolve(files);
+        });
+      }).then((files) => {
+        const promises = files.map((file) => {
+          return fs.readFile(file, 'utf8')
+            .then((fileData) => {
+              const dom = new JSDOM(fileData);
+              const window = dom.window;
+              const document = window.document;
+              const script = document.createElement('script');
+              script.type = 'text/javascript';
+              script.src = relativeToFile(file, jsInterfaceDest);
+              let head = document.getElementsByTagName('head')[0];
+              if (!head) {
+                head = document.createElement('head');
+                window.document.appendChild(head);
+              }
+              head.appendChild(script);
+              const htmlText = dom.serialize();
+              return fs.writeFile(file, htmlText, 'utf8');
+            });
+        });
+        return Promise.all(promises);
+      });
     });
 };
 
@@ -109,7 +154,7 @@ class WebWritableStream extends WritableStream {
       if (!_mainFile) {
         throw new Error('Main file is not set');
       }
-      try  {
+      try {
         const finalizer = getFinalizer(_mainFile);
         resolve(finalizer(_mainFile, _path));
       } catch (e) {
