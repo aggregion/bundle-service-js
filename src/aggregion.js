@@ -21,7 +21,7 @@ class AggregionBundleStream extends DuplexStream {
     check.assert.assigned(options, '"options" is required argument');
     check.assert.nonEmptyString(options.path, '"options.path" should be non-empty string');
     super({objectMode: true});
-    let {path, readonly} = options;
+    let {path, readonly, info} = options;
     let bundle = new AggregionBundle({path, readonly});
     this._encrypted = options.encrypted || false;
     this._entries = [];
@@ -29,6 +29,7 @@ class AggregionBundleStream extends DuplexStream {
     this._files = [];
     this._props = new BundleProps();
     this._info = new BundleProps();
+    this._infoToMix = info;
     this._bundle = bundle;
     this._initPromise = bundle
       .getBundleInfoData()
@@ -167,7 +168,8 @@ class AggregionBundleStream extends DuplexStream {
       throw new Error('value does not exist');
     }
     if (entry.value instanceof BundleProps) {
-      return new Buffer(entry.value.toJson(), 'UTF-8');
+      const obj = Object.assign(entry.value.toObject(), this._infoToMix || {});
+      return new Buffer(BundleProps.fromObject(obj).toJson(), 'UTF-8');
     }
     if ((entry.value instanceof Buffer) || (typeof entry.value === 'string')) {
       return entry.value;

@@ -5,7 +5,7 @@ const temp = require('temp');
 const fs = require('fs');
 
 describe('BundleService', () => {
-  describe.only('#resolve', () => {
+  describe('#resolve', () => {
     it('should resolve directory streamer', () => {
       let srcPath = path.join(__dirname, '../testdata/directory');
       BundleService.resolve(srcPath).should.be.equal(require('./directory'));

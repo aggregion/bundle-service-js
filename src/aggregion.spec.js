@@ -53,7 +53,8 @@ describe('Aggregion', function () {
         it('should pipe to writable stream', (done) => {
           let readStream = Aggregion.createReadStream({path: testBundlePath});
           let tempFile = temp.path() + '.agb';
-          let writeStream = Aggregion.createWriteStream({path: tempFile});
+          const infoToMix = {test: 'test'};
+          let writeStream = Aggregion.createWriteStream({path: tempFile, info: infoToMix});
           readStream.pipe(writeStream);
           writeStream.once('finish', () => {
             let testBundle = new Bundle({path: tempFile});
@@ -62,7 +63,13 @@ describe('Aggregion', function () {
               .readFilePropertiesData(fd)
               .then((propsData) => {
                 propsData.toString().should.equal(BundleProps.fromObject({"size":5}).toJson());
-                return {};
+              })
+              .then(() => {
+                return testBundle.getBundleInfoData();
+              })
+              .then(bundleInfoData => {
+                const info = BundleProps.fromJson(bundleInfoData.toString('UTF-8')).toObject();
+                info.test.should.equal(infoToMix.test);
               })
               .then(() => {
                 let testStream = Aggregion.createReadStream({path: tempFile});
