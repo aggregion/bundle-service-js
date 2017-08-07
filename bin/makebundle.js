@@ -3,7 +3,6 @@
 const cli = require('cli');
 const check = require('check-types');
 const BundleService = require('../src/');
-const TextStream = require('../src/text');
 const process = require('process');
 const EntryType = require('../src/entryType');
 
@@ -19,7 +18,6 @@ cli.parse({
 
 cli.main((args, options) => {
   try {
-    //check.assert.nonEmptyString(options.index, '"--index" is required argument and should be non-empty string');
     if (!options.outputType === 'text') {
       check.assert.nonEmptyString(options.output, '"--output" is required argument and should be non-empty string');
       check.assert.nonEmptyArray(args, 'You must specify input file or directory');
@@ -36,8 +34,8 @@ cli.main((args, options) => {
     cli.fatal(e.message);
   }
   let path = args[0];
-  let rs = BundleService.createReadStream({path, info: {}, props: {main_file: options.index}});
-  let ws = BundleService.createWriteStream({path: options.output, type: options.outputType});
+  let rs = BundleService.createReadStream({path, encrypted: !!options.inputKey, info: {}, props: {main_file: options.index}});
+  let ws = BundleService.createWriteStream({path: options.output, encrypted: !!options.outputKey, type: options.outputType});
   if (options.outputType === 'text') {
     ws.on('entry', (entry) => {
       if (entry.type === EntryType.FILE) {
