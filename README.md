@@ -42,7 +42,7 @@ let readStream = BundleService.createReadStream({path: '/path/to/any/file/or/dir
 
 // Create write stream
 
-let writeStream = BundleService.createWriteStream({path: '/path/to/any/file/example.agb'});
+let writeStream = BundleService.createWriteStream({path: '/path/to/any/file/example.agb', info: {someInfoToMix: 'info'}});
 
 // Pipe one to another
 
