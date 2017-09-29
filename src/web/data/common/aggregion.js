@@ -1,11 +1,12 @@
-var aggregion = (function () {
+var aggregion = window.aggregion = (function () {
 
     function getSignedUserInfo() {
       return localStorage.getItem('signedUserInfo');
     }
 
     return {
-      getSignedUserInfo: getSignedUserInfo
+      getSignedUserInfo: getSignedUserInfo,
+      webBundle: true
     };
   }
 )();

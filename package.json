@@ -1,7 +1,7 @@
 {
   "name": "agg-bundle-service",
   "author": "Denis Bezrukov <anthrax63@gmail.com>",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "Service for working with Aggregion bundles",
   "main": "./src/index.js",
   "scripts": {
