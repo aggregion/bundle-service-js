@@ -43,7 +43,7 @@ class EpubReadableStream extends ReadableStream {
             }
           }
         }
-        let props = BundleProps.fromObject({main_file: 'OEBPS/content.opf'});
+        let props = BundleProps.fromObject({main_file: mainFile});
         this._entries = [
           {type: EntryType.BUNDLE_INFO, value: info},
           {type: EntryType.BUNDLE_PROPS, value: props},
