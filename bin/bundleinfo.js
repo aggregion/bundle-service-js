@@ -8,7 +8,8 @@ const process = require('process');
 const EntryType = require('../src/entryType');
 
 cli.parse({
-  key: ['k', 'Hexadecimal string master key', 'string']
+  key: ['k', 'Hexadecimal string master key', 'string'],
+  public: ['p', 'Show only public info', 'boolean']
 });
 
 cli.main((args, options) => {
@@ -27,16 +28,16 @@ cli.main((args, options) => {
   if (options.key) {
     decryptor = BundleService.createDecryptor(new Buffer(options.key, 'hex'));
   }
-  let rs = BundleService.createReadStream({path, encrypted: !!options.key});
+  let rs = BundleService.createReadStream({path, encrypted: options.public || !!options.key});
   let ws = TextStream.createWriteStream();
   ws.on('entry', (entry) => {
     if (entry.type === EntryType.FILE) {
       console.log('File:');
       console.log('  Path:', entry.bundlePath);
-      if (entry.props) {
+      if (entry.props && !options.public) {
         console.log('  Properties:', entry.props.toJson());
       }
-    } else if (entry.type == EntryType.BUNDLE_PROPS) {
+    } else if (entry.type == EntryType.BUNDLE_PROPS && !options.public) {
       console.log('Bundle properties:');
       console.log('  ', entry.value.toJson());
     } else if (entry.type == EntryType.BUNDLE_INFO) {
@@ -49,6 +50,7 @@ cli.main((args, options) => {
     process.exit(0);
   });
   rs.on('error', (e) => {
+    console.log(new Error(e));
     cli.fatal(e);
     process.exit(-1);
   });
