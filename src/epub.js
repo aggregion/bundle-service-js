@@ -38,7 +38,7 @@ class EpubReadableStream extends ReadableStream {
               bundlePath: entry.name,
               props: BundleProps.fromObject({size: entry.size})
             });
-            if (entry.name.toLocaleLowerCase().endsWith('content.opf')) {
+            if (entry.name.toLowerCase().endsWith('content.opf')) {
               mainFile = entry.name;
             }
           }
