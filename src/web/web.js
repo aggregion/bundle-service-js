@@ -77,7 +77,14 @@ const finalizePdf = (mainFile, destDir) => {
   return finalizeWithTemplate(mainFile, destDir, 'pdf');
 };
 
+const finalizeProsv = (mainFile, destDir) => {
+  return finalizeHtml(mainFile, destDir);
+};
+
 const getFinalizer = (mainFile) => {
+  if (mainFile === 'index.prosvcontent.html') {
+    return finalizeProsv;
+  }
   const ext = path.extname(mainFile).toLowerCase();
   switch (ext) {
     case '.opf':
