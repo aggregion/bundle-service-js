@@ -27,9 +27,9 @@ class EpubReadableStream extends ReadableStream {
     zip
       .on('ready', () => {
         let info = new BundleProps();
-        let props = BundleProps.fromObject({main_file: 'OEBPS/content.opf'});
         let entries = [];
         let zipEntries = zip.entries();
+        let mainFile;
         for (let entryKey of Object.keys(zipEntries)) {
           let entry = zipEntries[entryKey];
           if (!entry.isDirectory && entry.size > 0) {
@@ -38,8 +38,12 @@ class EpubReadableStream extends ReadableStream {
               bundlePath: entry.name,
               props: BundleProps.fromObject({size: entry.size})
             });
+            if (entry.name.toLocaleLowerCase().endsWith('content.opf')) {
+              mainFile = entry.name;
+            }
           }
         }
+        let props = BundleProps.fromObject({main_file: 'OEBPS/content.opf'});
         this._entries = [
           {type: EntryType.BUNDLE_INFO, value: info},
           {type: EntryType.BUNDLE_PROPS, value: props},
