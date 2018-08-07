@@ -20,7 +20,7 @@
     "temp": "^0.8.3"
   },
   "dependencies": {
-    "agg-bundle": "git+https://stash.aggregion.com/scm/bck/node-bundle-module.git",
+    "agg-bundle": "git+ssh://git@stash.aggregion.com:7999/bck/node-bundle-module.git",
     "archiver": "^1.3.0",
     "check-types": "^7.1.3",
     "cli": "^1.0.1",
