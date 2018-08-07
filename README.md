@@ -18,10 +18,19 @@ Supported bundles:
 
 ## Installation
 
-```sh
+```bash
 npm install git+ssh://git@stash.aggregion.com:7999/bck/bundle-service-js.git --save
 ```
 
+## Requirements
+
+* MuPDF tools - needed if you use rendering features
+
+To install on Ubuntu use the following command:
+
+```bash
+sudo apt-get install mupdf-tools
+```
 ## Usage
 
 
@@ -92,20 +101,27 @@ readStream.on('ready', () => {
 
 ### Print help
 
-```sh
+```bash
 makebundle --help
 ```
 ### Make bundle
 
-```sh
+```bash
 makebundle -i path/to/index/file -o /path/to/output /path/to/input/file/or/directory
 ```
 
 ## Run tests
 
-```sh
+Run test without rendering features:
+```bash
 npm test
 ```
+
+Run test with rendering features:
+```bash
+WITH_RENDERER=1 npm test
+```
+
 ## License
 
 All rights reserved by Aggregion Ltd. Any use is only permitted with the consent of Aggregion.

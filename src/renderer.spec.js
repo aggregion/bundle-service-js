@@ -18,7 +18,9 @@ describe('Renderer', function() {
       should.not.throw(() => Resolver.createRenderer({path: pathToTestPdfFile, pages: ['1-100']}));
     });
 
-    it('should render PDF', (done) => {
+    const renderTestFunc = process.env.WITH_RENDERER ? it : it.skip;
+
+    renderTestFunc('should render PDF', (done) => {
       const tempPath = temp.path({suffix: '.pdf'});
       const readStream = Resolver.createReadStream({path: pathToTestPdfFile});
       const writeStream = Resolver.createRenderer({path: tempPath, pages: [1,2]});
@@ -30,7 +32,7 @@ describe('Renderer', function() {
       readStream.pipe(writeStream);
     });
 
-    it('should render ePub', (done) => {
+    renderTestFunc('should render ePub', (done) => {
       const tempPath = temp.path({suffix: '.pdf'});
       const readStream = Resolver.createReadStream({path: pathToTestEPubFile});
       const writeStream = Resolver.createRenderer({path: tempPath, pages: [1, '3-100']});
