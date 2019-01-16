@@ -18,6 +18,14 @@ describe('Directory', function () {
       should.not.throw(() => Directory.createReadStream({path: pathToTestDir, info, props}));
     });
 
+    it('should resolve content type', (done) => {
+      const dirReader = Directory.createReadStream({path: pathToTestDir, info, props});
+      dirReader.on('ready', () => {
+        dirReader.getInfo().toJson().should.equal(BundleProps.fromObject(Object.assign(info, {content_type: 'text/html'})).toJson());
+        done();
+      });
+    });
+
     it('should throw an error if directory does not exist', () => {
       should.throw(() => Directory.createReadStream({path: pathToUnexistentDir}));
     });
