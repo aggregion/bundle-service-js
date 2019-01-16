@@ -37,7 +37,7 @@ describe('Epub', function () {
               .on('readable', () => {
                 let count = zipReadStream.getFilesCount();
                 count.should.equal(18);
-                zipReadStream.getInfo().toJson().should.equal(BundleProps.fromObject({}).toJson());
+                zipReadStream.getInfo().toJson().should.equal(BundleProps.fromObject({content_type: 'application/epub+zip'}).toJson());
                 zipReadStream.getProps().toJson().should.equal(BundleProps.fromObject(props).toJson());
                 done();
               })
@@ -79,10 +79,10 @@ describe('Epub', function () {
       });
 
       describe('#getInfo', () => {
-        it('should return right info', (done) => {
+        it('should return correct info', (done) => {
           let dirReadStream = Epub.createReadStream({path: pathToTestFile});
           dirReadStream.once('readable', () => {
-            dirReadStream.getInfo().toJson().should.equal(BundleProps.fromObject({}).toJson());
+            dirReadStream.getInfo().toJson().should.equal(BundleProps.fromObject({content_type: 'application/epub+zip'}).toJson());
             done();
           });
         });

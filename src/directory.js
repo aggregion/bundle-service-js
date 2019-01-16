@@ -5,6 +5,7 @@ const BundleProps = require('./bundleprops');
 const recursive = require('recursive-readdir');
 const fs = require('fs');
 const Path = require('path');
+const mime = require('mime-types');
 
 class DirectoryReadableStream extends ReadableStream {
 
@@ -26,6 +27,10 @@ class DirectoryReadableStream extends ReadableStream {
       throw new Error(`Directory does not exist: ${path}`);
     this._entries = [];
     this._entryPos = 0;
+    if (props && props.main_file) {
+      const fileExt = Path.extname(props.main_file).toLowerCase();
+      info.content_type = mime.lookup(fileExt) || 'application/octet-stream';
+    }
     this._props = BundleProps.fromObject(props);
     this._info = BundleProps.fromObject(info);
     recursive(path, (err, files) => {
