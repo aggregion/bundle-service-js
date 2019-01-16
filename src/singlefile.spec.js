@@ -36,7 +36,7 @@ describe('SingleFile', function () {
                 let files = zipReadStream.getFiles();
                 files[0].should.equal('index.pdf');
                 count.should.equal(1);
-                zipReadStream.getInfo().toJson().should.equal(BundleProps.fromObject({}).toJson());
+                zipReadStream.getInfo().toJson().should.equal(BundleProps.fromObject({content_type: 'application/pdf'}).toJson());
                 zipReadStream.getProps().toJson().should.equal(BundleProps.fromObject(props).toJson());
                 done();
               })
@@ -70,9 +70,9 @@ describe('SingleFile', function () {
 
       describe('#getInfo', () => {
         it('should return right info', (done) => {
-          let dirReadStream = SingleFile.createReadStream({path: pathToTestFile});
-          dirReadStream.once('readable', () => {
-            dirReadStream.getInfo().toJson().should.equal(BundleProps.fromObject({}).toJson());
+          let readStream = SingleFile.createReadStream({path: pathToTestFile});
+          readStream.once('readable', () => {
+            readStream.getInfo().toJson().should.equal(BundleProps.fromObject({content_type: 'application/pdf'}).toJson());
             done();
           });
         });

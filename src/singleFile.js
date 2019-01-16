@@ -4,6 +4,7 @@ const {EntryType, BundleStreamFactory} = require('./types');
 const BundleProps = require('./bundleprops');
 const fs = require('fs');
 const path = require('path');
+const mime = require('mime-types');
 
 class SingleFileReadableStream extends ReadableStream {
   /**
@@ -19,10 +20,11 @@ class SingleFileReadableStream extends ReadableStream {
       throw new Error(`File does not exist: ${options.path}`);
     let fileExt = path.extname(options.path).toLowerCase();
     let bundleFileName = 'index' + fileExt;
+    const type = mime.lookup(fileExt) || 'application/octet-stream';
     this._props = BundleProps.fromObject({
-      main_file: 'index.pdf'
+      main_file: bundleFileName
     });
-    this._info = new BundleProps();
+    this._info = BundleProps.fromObject({content_type: type});
     this._files = [bundleFileName];
     this.push({type: EntryType.BUNDLE_PROPS, value: this._props});
     this.push({type: EntryType.BUNDLE_INFO, value: this._info});

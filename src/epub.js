@@ -26,7 +26,7 @@ class EpubReadableStream extends ReadableStream {
     });
     zip
       .on('ready', () => {
-        let info = new BundleProps();
+        let info = BundleProps.fromObject({content_type: 'application/epub+zip'});
         let entries = [];
         let zipEntries = zip.entries();
         let mainFile;
