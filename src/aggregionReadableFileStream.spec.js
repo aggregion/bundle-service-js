@@ -1,5 +1,4 @@
 const fs = require('fs');
-const path = require('path');
 const digestStream = require('digest-stream');
 const passStream = require('pass-stream');
 const AggregionBundle = require('agg-bundle');
