@@ -38,5 +38,6 @@
   "repository": {
     "type": "git",
     "url": "git@github.com:aggregion/bundle-service-js.git"
-  }
+  },
+  "homepage": "https://www.aggregion.com"
 }
