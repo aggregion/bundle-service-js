@@ -31,7 +31,7 @@ describe('SingleFile', function () {
           zipWriteStream.on('finish', () => {
             let zipReadStream = AggregionZip.createReadStream({path: tempZip});
             zipReadStream
-              .on('readable', () => {
+              .once('readable', () => {
                 let count = zipReadStream.getFilesCount();
                 let files = zipReadStream.getFiles();
                 files[0].should.equal('index.pdf');

@@ -34,7 +34,7 @@ describe('Epub', function () {
           zipWriteStream.on('finish', () => {
             let zipReadStream = AggregionZip.createReadStream({path: tempZip});
             zipReadStream
-              .on('readable', () => {
+              .once('readable', () => {
                 let count = zipReadStream.getFilesCount();
                 count.should.equal(18);
                 zipReadStream.getInfo().toJson().should.equal(BundleProps.fromObject({content_type: 'application/epub+zip'}).toJson());

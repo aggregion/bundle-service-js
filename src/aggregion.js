@@ -3,7 +3,7 @@ const fs = require('fs');
 const BundleProps = require('./bundleprops');
 const {Duplex: DuplexStream} = require('stream');
 const {EntryType, BundleStreamFactory} = require('./types');
-const AggregionBundle = require('agg-bundle');
+const AggregionBundle = require('@aggregion/agg-bundle');
 const AggregionReadableFileStream = require('./aggregionReadableFileStream');
 const AggregionWritableFileStream = require('./aggregionWritableFileStream');
 

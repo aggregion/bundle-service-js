@@ -54,7 +54,7 @@ describe('Zip', function () {
                 checkInfo(testStream.getInfo());
                 checkProps(testStream.getProps());
                 done();
-                setTimeout(() => fs.unlink(tempFile), 0);
+                setTimeout(() => fs.unlinkSync(tempFile), 0);
               })
               .once('error', (e) => {
                 throw e;
@@ -87,7 +87,7 @@ describe('Zip', function () {
                   should.exist(mainFile);
                   mainFile.should.be.equal('index.html');
                   done();
-                  setTimeout(() => fs.unlink(tempFile), 0);
+                  setTimeout(() => fs.unlinkSync(tempFile), 0);
                 })
                 .once('error', (e) => {
                   done(e);

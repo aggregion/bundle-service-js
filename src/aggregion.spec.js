@@ -4,7 +4,7 @@ const path = require('path');
 const temp = require('temp');
 const fs = require('fs');
 const sinon = require('sinon');
-const Bundle = require('agg-bundle');
+const Bundle = require('@aggregion/agg-bundle');
 const BundleProps = require('./bundleprops');
 
 describe('Aggregion', function () {

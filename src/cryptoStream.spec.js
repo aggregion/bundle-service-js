@@ -2,7 +2,7 @@ const CryptoStream = require('./cryptoStream');
 const BundleService = require('./index');
 const path = require('path');
 const temp = require('temp');
-const AggregionBundle = require('agg-bundle');
+const AggregionBundle = require('@aggregion/agg-bundle');
 const fs = require('fs');
 const BundleProps = require('./bundleprops');
 
